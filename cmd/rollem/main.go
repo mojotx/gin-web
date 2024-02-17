@@ -1,38 +1,67 @@
 package main
 
 import (
+	"context"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mojotx/gin-web/pkg/dice"
 	"github.com/mojotx/gin-web/pkg/logging"
+	"github.com/rs/zerolog/log"
 )
+
+var srv *http.Server
 
 func main() {
 
 	logging.InitZerolog()
 
 	r := gin.Default()
+	_ = r.SetTrustedProxies([]string{})
 	r.GET("/dice/:diceCmd", HandleDice)
+	r.StaticFile("/", "./web/index.html")
+	r.GET("/shutdown", HandleShutdown)
 
-	/*
-		func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "pong",
-			})
-		})
-	*/
-	r.Run() // listen and serve on 0.0.0.0:8080
+	srv = &http.Server{
+		Addr:    "[::1]:8080",
+		Handler: r,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Error().Err(err).Msg("failure with running router")
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	stopServer()
 
 }
 
 func HandleDice(c *gin.Context) {
 	diceCmd := c.Param("diceCmd")
 
+	result := dice.ParseDiceCmd(diceCmd)
+
 	c.JSON(http.StatusOK, gin.H{
-		"result": 42,
+		"result": result,
 	})
 }
 
-func HandleWeb(c *gin.Context) {
-	c.HTML(http.StatusOK)
+func HandleShutdown(c *gin.Context) {
+	stopServer()
+}
+
+func stopServer() {
+	log.Debug().Msg("shutting down...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_ = srv.Shutdown(ctx)
 }
