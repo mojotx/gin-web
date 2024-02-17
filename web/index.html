@@ -7,28 +7,29 @@
     <title>Dice Commands</title>
 </head>
 
-<script>
-    function setAction(form) {
-        const url = "http://[::1]:8080/dice"
-        const slash = '/';
 
-        const newURL = url + slash + form.diceCmd.value
-
-        fetch(newURL,
-            {
-                headers: { "Content-Type": "application/json; charset=utf-8" },
-                method: "GET",
-                body: ""
-            }).then(data => data.json()).then((json) => {
-                alert(JSON.stringify(json));
-                document.getElementById("form").reset();
-            });
-        return false
-    }
-</script>
 
 <body>
+    <script type="text/javascript">
+        function setAction(form) {
+            const url = "http://mbp.jarvis.com:8080/dice"
+            const slash = '/';
+
+            const newURL = url + slash + form.diceCmd.value
+
+            fetch(newURL,
+                {
+                    headers: { "Content-Type": "application/json; charset=utf-8" },
+                    method: "GET"
+                }).then(data => data.json()).then((json) => {
+                    alert(JSON.stringify(json));
+                    document.getElementById("form").reset();
+                });
+            return false
+        }
+    </script>
     <h1>Dice Commands</h1>
+    <h3 id="right"><script type="text/javascript">document.write("This URL is: " + location.href);</script></h3>
 
     <div>
         <form id="form" onsubmit="return setAction(this)">

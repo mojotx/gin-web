@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mojotx/gin-web/pkg/dice"
 	"github.com/mojotx/gin-web/pkg/logging"
+	cors "github.com/rs/cors/wrapper/gin"
 	"github.com/rs/zerolog/log"
 )
 
@@ -22,12 +23,13 @@ func main() {
 
 	r := gin.Default()
 	_ = r.SetTrustedProxies([]string{})
+	r.Use(cors.AllowAll())
 	r.GET("/dice/:diceCmd", HandleDice)
 	r.StaticFile("/", "./web/index.html")
 	r.GET("/shutdown", HandleShutdown)
 
 	srv = &http.Server{
-		Addr:    "[::1]:8080",
+		Addr:    "192.168.1.21:8080",
 		Handler: r,
 	}
 
