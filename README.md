@@ -2,7 +2,7 @@
 
 Playing with gin-gonic
 
-## Dice:
+## Dice
 
 - d4
 - d6
@@ -12,7 +12,13 @@ Playing with gin-gonic
 - d20
 - d100
 
-## Dice Command Examples:
+## Dice Command Examples
 
 - 3d8+5: d8 + d8 + d8 + 5
 - d20-1: d20 - 1
+
+## Regular Expression
+
+```go
+    re := regexp.MustCompile(`^([0-9]*)d([0-9]*)([+-]?)([0-9]*)$`)
+```
