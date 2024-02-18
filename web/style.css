@@ -1,0 +1,38 @@
+img {
+    --s: 179px; /* the image size */
+
+    width: var(--s);
+    height: var(--s);
+    box-sizing: border-box;
+    object-fit: cover;
+    cursor: pointer;
+    transition: .5s;
+  }
+
+  img.left {
+    object-position: right;
+    padding-left: var(--s);
+    background: #542437;
+  }
+
+  img.right {
+    object-position: left;
+    padding-right: var(--s);
+    background: #8A9B0F;
+  }
+
+  img.top {
+    object-position: bottom;
+    padding-top: var(--s);
+    background: #E94E77;
+  }
+
+  img.bottom {
+    object-position: top;
+    padding-bottom: var(--s);
+    background: #7A6A53;
+  }
+
+  img:hover {
+    padding: 0;
+  }

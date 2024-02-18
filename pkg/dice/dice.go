@@ -60,18 +60,22 @@ func ParseDiceCmd(s string) (result int64) {
 
 		matches := re.FindStringSubmatch(s)
 
-		var mult int64
-		var err error
+		mult := 1
 		if len(matches[1]) > 0 {
-			mult, err = strconv.ParseInt(matches[1], 10, 8)
+			tmp, err := strconv.ParseInt(matches[1], 10, 8)
 			if err != nil {
 				log.Error().Err(err).Str("string", matches[1]).Msg("problem parsing integer value")
 			}
-			log.Debug().Int("mult", int(mult)).Msg("getting number of dice")
+			mult = int(tmp)
+			log.Debug().Int("mult", mult).Msg("getting number of dice")
 		}
 
-		helper := func(limit int64, df DiceFunction) {
-			log.Debug().Int("limit", int(limit)).Msgf("result... %+v", df)
+		if mult == 0 {
+			mult = 1
+		}
+
+		helper := func(limit int, df DiceFunction) {
+			log.Debug().Int("limit", limit).Msgf("result... %+v", df)
 			for n := limit; n > 0; n-- {
 				result = result + int64(df())
 			}
@@ -97,6 +101,7 @@ func ParseDiceCmd(s string) (result int64) {
 		}
 
 		var amt int64
+		var err error
 		if len(matches[4]) > 0 {
 			amt, err = strconv.ParseInt(matches[4], 10, 8)
 			if err != nil {

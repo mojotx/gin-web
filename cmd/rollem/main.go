@@ -26,6 +26,8 @@ func main() {
 	r.Use(cors.AllowAll())
 	r.GET("/dice/:diceCmd", HandleDice)
 	r.StaticFile("/", "./web/index.html")
+	r.StaticFile("/dice.gif", "./web/dice.gif")
+	r.StaticFile("/dice.mp4", "./web/dice.mp4")
 	r.GET("/shutdown", HandleShutdown)
 
 	srv = &http.Server{
@@ -35,7 +37,7 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Error().Err(err).Msg("failure with running router")
+			log.Fatal().Err(err).Msg("failure with running router")
 		}
 	}()
 
