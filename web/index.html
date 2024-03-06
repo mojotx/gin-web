@@ -4,12 +4,16 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="/web/style.css" />
     <title>Dice Commands</title>
 </head>
 
 <body>
     <script type="text/javascript">
         function setAction(form) {
+
+            // Display animation
+
             const url = "http://mbp.jarvis.com:8080/dice"
             const slash = '/';
 
@@ -35,6 +39,7 @@
             <input type="text" id="diceCmd" name="diceCmd" required minlength="2" maxlength="20" size="20" />
             <input type="submit" value="Send Request" />
         </form>
+    <video autoplay loop muted width="179" height="179" src="/dice.mp4">Rolling Dice Animation</video>
     </div>
 </body>
 </html>
